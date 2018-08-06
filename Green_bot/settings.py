@@ -79,8 +79,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'GreenBot_db',
         'USER': 'GreenBot_user_db',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost', # set in docker-compose.yml
+        'PASSWORD': 'pass',
+        'HOST': '127.0.0.1', # set in docker-compose.yml
         'PORT': 5432 # default postgres port
     }
 }
