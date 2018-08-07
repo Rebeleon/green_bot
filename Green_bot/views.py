@@ -2,31 +2,32 @@ import sys
 import time
 import telepot
 from telepot.loop import MessageLoop
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-from .settings import BOT_TOKEN
+from telepot.namedtuple import InlineQueryResultArticle, InputTextMessageContent
+from settings import BOT_TOKEN
 
 
-def on_chat_message(msg):
-    content_type, chat_type, chat_id = telepot.glance(msg)
+def on_inline_query(msg):
+    query_id, from_id, query_string = telepot.glance(msg, flavor='inline_query')
+    print ('Inline Query:', query_id, from_id, query_string)
 
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                   [InlineKeyboardButton(text='Press me', callback_data='press')],
-               ])
+    articles = [InlineQueryResultArticle(
+                    id='abc',
+                    title='ABC',
+                    input_message_content=InputTextMessageContent(
+                        message_text='Hello'
+                    )
+               )]
 
-    bot.sendMessage(chat_id, 'Use inline keyboard', reply_markup=keyboard)
+    bot.answerInlineQuery(query_id, articles)
 
-
-def on_callback_query(msg):
-    query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-    print('Callback Query:', query_id, from_id, query_data)
-
-    bot.answerCallbackQuery(query_id, text='Got it')
+def on_chosen_inline_result(msg):
+    result_id, from_id, query_string = telepot.glance(msg, flavor='chosen_inline_result')
+    print ('Chosen Inline Result:', result_id, from_id, query_string)
 
 
 bot = telepot.Bot(BOT_TOKEN)
-MessageLoop(bot, {'chat': on_chat_message,
-                  'callback_query': on_callback_query}).run_as_thread()
-print('Listening ...')
+MessageLoop(bot, {'inline_query': on_inline_query,
+                  'chosen_inline_result': on_chosen_inline_result}).run_as_thread()
 
 while 1:
     time.sleep(10)
