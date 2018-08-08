@@ -44,7 +44,7 @@ def on_chat_message(msg):
 
     command = msg['text']
 
-    if command == '/list@GREEN_TOWN_Bot':
+    if command == '/list@GREEN_TOWN_Bot'or command == "/list":
         all_entries = Name.objects.order_by("order")
         message = ''
         i = 1
