@@ -51,7 +51,7 @@ def on_chat_message(msg):
         for n in all_entries:
             if n.buyer == "Заказ":
                 n = str(n) + " (Заказывает воду)"
-            n = str(i) + "." + str(n)
+            n = str(i) + ". " + str(n)
             i += 1
             message += (str(n) + "\n")
         bot.sendMessage(chat_id, message)
