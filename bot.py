@@ -34,6 +34,7 @@ It works like this:
 
 message_with_inline_keyboard = None
 
+
 def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
     print('Chat:', content_type, chat_type, chat_id)
@@ -43,10 +44,15 @@ def on_chat_message(msg):
 
     command = msg['text']
 
-    if command == 'list':
-        all_entries = Name.objects.all()
+    if command == '/list@GREEN_TOWN_Bot':
+        all_entries = Name.objects.order_by("order")
         message = ''
+        i = 1
         for n in all_entries:
+            if n.buyer == "Заказ":
+                n = str(n) + " (Заказывает воду)"
+            n = str(i) + "." + str(n)
+            i += 1
             message += (str(n) + "\n")
         bot.sendMessage(chat_id, message)
 
