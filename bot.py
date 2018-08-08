@@ -46,6 +46,7 @@ def on_chat_message(msg):
 
     if command == '/list@GREEN_TOWN_Bot'or command == "/list":
         all_entries = Name.objects.order_by("order")
+        '''
         message = ''
         i = 1
         for n in all_entries:
@@ -55,6 +56,14 @@ def on_chat_message(msg):
             i += 1
             message += (str(n) + "\n")
         bot.sendMessage(chat_id, message)
+        '''
+        parts = []
+        for i, n in enumerate(all_entries, start=1):
+            part = f"{i}. {n.name}"
+            if n.buyer:
+                part = f"{part} (Заказывает воду)"
+            parts.append(part)
+        bot.sendMessage(chat_id, "\n".join(parts))
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)
