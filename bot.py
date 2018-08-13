@@ -3,10 +3,11 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
 import time
+import json
 import threading
 import random
 import telepot
-from green_bot_app.models import Name
+from green_bot_app.models import UserTelegramBot, Vote
 from telepot.loop import MessageLoop
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, ForceReply
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
@@ -41,11 +42,11 @@ def on_chat_message(msg):
 
     if content_type != 'text':
         return
-
+    callback_data = msg.get('data')
     command = msg['text']
 
     if command == '/list@GREEN_TOWN_Bot'or command == "/list":
-        all_entries = Name.objects.order_by("order")
+        all_entries = UserTelegramBot.objects.order_by("order")
         '''
         message = ''
         i = 1
@@ -65,11 +66,40 @@ def on_chat_message(msg):
             parts.append(part)
         bot.sendMessage(chat_id, "\n".join(parts))
 
+    if command == '/next@GREEN_TOWN_Bot'or command == "/next":
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='Доставлена', callback_data='yes')],
+            [InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
+        ])
+        bot.sendMessage(chat_id, 'Вода доставлена?', reply_markup=keyboard)
+
+
+def on_callback_query(msg):
+    query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+    print('Callback Query:', query_id, from_id, query_data)
+    if query_data == 'yes':
+        count = Vote.objects.get(id=2)
+        count = count.counter + 1
+        Vote.objects.filter(id=2).update(counter=count)
+        if count >= 3:
+            Vote.objects.filter(id=2).update(counter=0)
+            user = UserTelegramBot.objects.get(buyer=True)
+            user.buyer = False
+            user.save()
+            next_order = user.order + 1
+            next_user = UserTelegramBot.objects.get(order=next_order)
+            next_user.buyer = True
+            next_user.save()
+    bot.answerCallbackQuery(query_id, text='Got it')
+
 
 bot = telepot.Bot(settings.BOT_TOKEN)
 answerer = telepot.helper.Answerer(bot)
 
-MessageLoop(bot, {'chat': on_chat_message}).run_as_thread()
+
+# MessageLoop(bot, {'chat': on_chat_message}).run_as_thread()
+MessageLoop(bot, {'chat': on_chat_message,
+                  'callback_query': on_callback_query}).run_as_thread()
 print('Listening ...')
 
 # Keep the program running.

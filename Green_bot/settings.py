@@ -78,8 +78,8 @@ WSGI_APPLICATION = 'Green_bot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'GreenBot_db',
-        'USER': 'GreenBot_user_db',
+        'NAME': 'Bot_GreenTown_db',
+        'USER': 'GreeBot_db_user',
         'PASSWORD': 'pass',
         'HOST': '127.0.0.1', # set in docker-compose.yml
         'PORT': 5432 # default postgres port
