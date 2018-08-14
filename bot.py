@@ -68,8 +68,8 @@ def on_chat_message(msg):
 
     if command == '/next@GREEN_TOWN_Bot'or command == "/next":
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='Доставлена', callback_data='yes')],
-            [InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
+            [InlineKeyboardButton(text='Доставлена', callback_data='yes'),
+             InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
         ])
         bot.sendMessage(chat_id, 'Вода доставлена?', reply_markup=keyboard)
 
@@ -86,6 +86,10 @@ def on_callback_query(msg):
             user = UserTelegramBot.objects.get(buyer=True)
             user.buyer = False
             user.save()
+            print(user.order)
+            print(len(UserTelegramBot.objects.all()))
+            if len(UserTelegramBot.objects.all()) <= user.order:
+                user.order = 0
             next_order = user.order + 1
             next_user = UserTelegramBot.objects.get(order=next_order)
             next_user.buyer = True
