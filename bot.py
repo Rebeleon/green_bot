@@ -67,8 +67,9 @@ def on_chat_message(msg):
         bot.sendMessage(chat_id, "\n".join(parts))
 
     if command == '/next@GREEN_TOWN_Bot'or command == "/next":
+        vote = Vote.objects.get(id=2)
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='Доставлена', callback_data='yes'),
+            [InlineKeyboardButton(text='Доставлена (%s )' % vote.counter, callback_data='yes'),
              InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
         ])
         bot.sendMessage(chat_id, 'Вода доставлена?', reply_markup=keyboard)
@@ -77,23 +78,32 @@ def on_chat_message(msg):
 def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     print('Callback Query:', query_id, from_id, query_data)
+
     if query_data == 'yes':
+        msg_ident = (msg['from']['id'], msg['message']['message_id'])
+        vote = Vote.objects.get(id=2)
         count = Vote.objects.get(id=2)
         count = count.counter + 1
         Vote.objects.filter(id=2).update(counter=count)
+        keyboard1 = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='Доставлена (%s )' % count, callback_data='yes'),
+             InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
+        ])
+        # editor = telepot.helper.Editor(bot, msg_ident)
+        bot.editMessageReplyMarkup(msg_ident, reply_markup=keyboard1)
+
         if count >= 3:
             Vote.objects.filter(id=2).update(counter=0)
             user = UserTelegramBot.objects.get(buyer=True)
             user.buyer = False
             user.save()
-            print(user.order)
-            print(len(UserTelegramBot.objects.all()))
             if len(UserTelegramBot.objects.all()) <= user.order:
                 user.order = 0
             next_order = user.order + 1
             next_user = UserTelegramBot.objects.get(order=next_order)
             next_user.buyer = True
             next_user.save()
+            bot.editMessageText(msg_ident, 'Следующий заказывает %s' % str(next_user.name))
     bot.answerCallbackQuery(query_id, text='Got it')
 
 
