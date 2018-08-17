@@ -68,11 +68,15 @@ def on_chat_message(msg):
 
     if command == '/next@GREEN_TOWN_Bot'or command == "/next":
         vote = Vote.objects.get(id=2)
+        print(msg['message_id'])
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='Доставлена (%s )' % vote.counter, callback_data='yes'),
              InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
         ])
         bot.sendMessage(chat_id, 'Вода доставлена?', reply_markup=keyboard)
+        #if not vote.message_id:
+        vote.message_id = telepot.message_identifier
+        vote.save()
 
 
 def on_callback_query(msg):
@@ -80,19 +84,17 @@ def on_callback_query(msg):
     print('Callback Query:', query_id, from_id, query_data)
 
     if query_data == 'yes':
-        msg_ident = (msg['from']['id'], msg['message']['message_id'])
         vote = Vote.objects.get(id=2)
-        count = Vote.objects.get(id=2)
-        count = count.counter + 1
-        Vote.objects.filter(id=2).update(counter=count)
+        iteration = vote.counter + 1
+        Vote.objects.filter(id=2).update(counter=iteration)
         keyboard1 = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text='Доставлена (%s )' % count, callback_data='yes'),
+            [InlineKeyboardButton(text='Доставлена (%s )' % iteration, callback_data='yes'),
              InlineKeyboardButton(text='Вода отсутствует', callback_data='no')],
         ])
         # editor = telepot.helper.Editor(bot, msg_ident)
-        bot.editMessageReplyMarkup(msg_ident, reply_markup=keyboard1)
+        bot.editMessageReplyMarkup(vote.message_id, reply_markup=keyboard1)
 
-        if count >= 3:
+        if iteration >= 3:
             Vote.objects.filter(id=2).update(counter=0)
             user = UserTelegramBot.objects.get(buyer=True)
             user.buyer = False
@@ -103,7 +105,7 @@ def on_callback_query(msg):
             next_user = UserTelegramBot.objects.get(order=next_order)
             next_user.buyer = True
             next_user.save()
-            bot.editMessageText(msg_ident, 'Следующий заказывает %s' % str(next_user.name))
+            bot.editMessageText(count.message_id, 'Следующий заказывает %s' % str(next_user.name))
     bot.answerCallbackQuery(query_id, text='Got it')
 
 

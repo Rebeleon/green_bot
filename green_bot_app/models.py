@@ -15,6 +15,5 @@ class UserTelegramBot(models.Model):
 class Vote(models.Model):
    # user_telegram_bot = models.ForeignKey(UserTelegramBot, on_delete=models.CASCADE)
    # choice = models.CharField(max_length=100)
+    message_id = models.IntegerField(null=True)
     counter = models.IntegerField(default=0)
-   # message_id = models.IntegerField(default=0)
-

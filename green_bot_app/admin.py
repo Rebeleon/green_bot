@@ -8,7 +8,7 @@ class UserTelegramAdmin(admin.ModelAdmin):
 
 
 class VoteAdmin(admin.ModelAdmin):
-    list_display = ('counter','id')
+    list_display = ('counter','id', 'message_id')
 
 
 admin.site.register(UserTelegramBot, UserTelegramAdmin)
