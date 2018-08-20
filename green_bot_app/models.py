@@ -11,14 +11,6 @@ class UserTelegramBot(models.Model):
         return self.name
 
 
-class Vote(models.Model):
-    message_id = models.IntegerField(null=True)
-    counter = models.IntegerField(default=0)
-
-    def __str__(self):
-        return str(self.message_id)
-
-
 class TelegramUser(models.Model):
     id_telegram = models.IntegerField()
     first_name = models.CharField(max_length=100)
