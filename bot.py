@@ -47,7 +47,8 @@ def on_chat_message(msg):
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text=f'Доставлена ({counter})', callback_data='yes')]
         ])
-        bot.sendMessage(chat_id, f'Доставка воды: {UserTelegramBot.objects.get(buyer=True).name}.', reply_markup=keyboard)
+        water_buyer = UserTelegramBot.objects.get(buyer=True).name
+        bot.sendMessage(chat_id, f'Доставка воды: {water_buyer}.', reply_markup=keyboard)
 
 
 def on_callback_query(msg):
