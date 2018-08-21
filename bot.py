@@ -5,7 +5,7 @@ import telepot
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
-from green_bot_app.models import UserTelegramBot, TelegramUser
+from green_bot_app.models import Organisation, TelegramUser
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -33,7 +33,7 @@ def on_chat_message(msg):
     command = msg['text']
 
     if command == '/list@GREEN_TOWN_Bot' or command == "/list":
-        all_entries = UserTelegramBot.objects.order_by("order")
+        all_entries = Organisation.objects.order_by("order")
         parts = []
         for i, n in enumerate(all_entries, start=1):
             part = f"{i}. {n.name}"
@@ -47,7 +47,7 @@ def on_chat_message(msg):
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text=f'Доставлена ({counter})', callback_data='yes')]
         ])
-        water_buyer = UserTelegramBot.objects.get(buyer=True).name
+        water_buyer = Organisation.objects.get(buyer=True).name
         bot.sendMessage(chat_id, f'Доставка воды: {water_buyer}.', reply_markup=keyboard)
 
 
@@ -68,13 +68,13 @@ def on_callback_query(msg):
 
         if iteration >= 2:
             TelegramUser.objects.filter(voted=True).update(voted=False)
-            organisation = UserTelegramBot.objects.get(buyer=True)
+            organisation = Organisation.objects.get(buyer=True)
             organisation.buyer = False
             organisation.save()
-            if len(UserTelegramBot.objects.all()) <= organisation.order:
+            if len(Organisation.objects.all()) <= organisation.order:
                 organisation.order = 0
             next_order = organisation.order + 1
-            next_organisation = UserTelegramBot.objects.get(order=next_order)
+            next_organisation = Organisation.objects.get(order=next_order)
             next_organisation.buyer = True
             next_organisation.save()
             bot.editMessageText(msg_identifier, f'Следующий заказывает {str(next_organisation.name)}')
