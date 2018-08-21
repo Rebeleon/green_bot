@@ -32,7 +32,7 @@ def on_chat_message(msg):
         return
     command = msg['text']
 
-    if command == '/list@GREEN_TOWN_Bot'or command == "/list":
+    if command == '/list@GREEN_TOWN_Bot' or command == "/list":
         all_entries = UserTelegramBot.objects.order_by("order")
         parts = []
         for i, n in enumerate(all_entries, start=1):
@@ -42,7 +42,7 @@ def on_chat_message(msg):
             parts.append(part)
         bot.sendMessage(chat_id, "\n".join(parts))
 
-    if command == '/next@GREEN_TOWN_Bot'or command == "/next":
+    if command == '/next@GREEN_TOWN_Bot' or command == "/next":
         counter = len(TelegramUser.objects.filter(voted=True))
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text=f'Доставлена ({counter})', callback_data='yes')]
