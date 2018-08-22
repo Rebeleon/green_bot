@@ -1,0 +1,45 @@
+version: '3.6'
+services:
+  waterbot-web:
+    image: hub.ferumflex.com/ferumflex/waterbot:prod
+    environment:
+      - SERVER=prod
+    depends_on:
+      - waterbot-postgres
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: 1G
+      labels:
+        - "traefik.enable=true"
+        - "traefik.backend=bitbot"
+        - "traefik.frontend.rule=Host:waterbot.ferumflex.com"
+        - "traefik.docker.network=traefik_frontend"
+        - "traefik.port=80"
+    networks:
+      - backend
+      - traefik_frontend
+
+  waterbot-postgres:
+    image: postgres:10
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: 1G
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=GreeBot_db_user
+      - POSTGRES_DB=Bot_GreenTown_db
+    volumes:
+      - /data/waterbot/postgresql_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+networks:
+  backend:
+  traefik_frontend:
+    external: true

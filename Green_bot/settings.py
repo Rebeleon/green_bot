@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'Bot_GreenTown_db',
         'USER': 'GreeBot_db_user',
         'PASSWORD': 'pass',
-        'HOST': '127.0.0.1', # set in docker-compose.yml
+        'HOST': 'waterbot-postgres', # set in docker-compose.yml
         'PORT': 5432 # default postgres port
     }
 }
@@ -124,5 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'volatile', 'static')
 
 BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
