@@ -14,7 +14,7 @@ services:
           memory: 1G
       labels:
         - "traefik.enable=true"
-        - "traefik.backend=bitbot"
+        - "traefik.backend=waterbot"
         - "traefik.frontend.rule=Host:waterbot.ferumflex.com"
         - "traefik.docker.network=traefik_frontend"
         - "traefik.port=80"
