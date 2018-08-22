@@ -22,7 +22,7 @@ services:
       - backend
       - traefik_frontend
 
-  waterbot-web:
+  waterbot-bot:
     image: hub.ferumflex.com/ferumflex/waterbot:prod
     command: python3.6 bot.py
     environment:
