@@ -14,7 +14,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+SERVER = os.environ.get('SERVER', 'dev')
+assert SERVER in ('dev', 'prod')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -23,9 +24,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^beg+s@ef4q)#%ul*rq__wn7_ehf*pc6$yd_$rlbq^7lcf38-r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(SERVER != 'prod')
 
-ALLOWED_HOSTS = []
+if SERVER == 'prod':
+    ALLOWED_HOSTS = [
+        'waterbot.ferumflex.com',
+    ]
+else:
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -127,4 +133,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'volatile', 'static')
 
-BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
+if SERVER == 'prod':
+    BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
+else:
+    BOT_TOKEN = ''
