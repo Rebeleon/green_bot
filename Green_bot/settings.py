@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'Green_bot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Bot_GreenTown_db',
+        'NAME': 'Water_Bot_db',
         'USER': 'GreeBot_db_user',
         'PASSWORD': 'pass',
         'HOST': '127.0.0.1', # set in docker-compose.yml
