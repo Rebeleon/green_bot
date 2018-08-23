@@ -137,3 +137,8 @@ if SERVER == 'prod':
     BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
 else:
     BOT_TOKEN = '670909040:AAHH3WyhMpCHq1qw4axxaSMX16n_rLLEdLU'
+
+if SERVER == 'prod':
+    BOT_NAME = 'GREEN_TOWN_Bot'
+else:
+    BOT_NAME = 'Dev_Green_Town_Bot'

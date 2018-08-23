@@ -32,7 +32,7 @@ def on_chat_message(msg):
         return
     command = msg['text']
 
-    if command == '/list@GREEN_TOWN_Bot' or command == "/list":
+    if command == f'/list@{settings.BOT_NAME}' or command == "/list":
         all_entries = Organisation.objects.order_by("order")
         parts = []
         for i, n in enumerate(all_entries, start=1):
@@ -42,7 +42,7 @@ def on_chat_message(msg):
             parts.append(part)
         bot.sendMessage(chat_id, "\n".join(parts))
 
-    if command == '/next@GREEN_TOWN_Bot' or command == "/next":
+    if command == f'/next@{settings.BOT_NAME}' or command == "/next":
         counter = len(TelegramUser.objects.filter(voted=True))
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text=f'Доставлена ({counter})', callback_data='yes')]
@@ -50,7 +50,7 @@ def on_chat_message(msg):
         water_buyer = Organisation.objects.get(buyer=True).name
         bot.sendMessage(chat_id, f'Доставка воды: {water_buyer}.', reply_markup=keyboard)
 
-    if command == '/help@GREEN_TOWN_Bot' or command == "/help":
+    if command == f'/help@{settings.BOT_NAME}' or command == "/help":
         bot.sendMessage(chat_id, 'Бот помогает упростить контроль доставки воды.'+
                                  'Имеет 2 команды: /list - перечень потребителей и /next -'+
                                  'кнопка подверждения доставки (достаточно 2-х голосов)'
