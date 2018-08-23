@@ -50,6 +50,12 @@ def on_chat_message(msg):
         water_buyer = Organisation.objects.get(buyer=True).name
         bot.sendMessage(chat_id, f'Доставка воды: {water_buyer}.', reply_markup=keyboard)
 
+    if command == '/help@GREEN_TOWN_Bot' or command == "/help":
+        bot.sendMessage(chat_id, 'Бот помогает упростить контроль доставки воды.'+
+                                 'Имеет 2 команды: /list - перечень потребителей и /next -'+
+                                 'кнопка подверждения доставки (достаточно 2-х голосов)'
+                        )
+
 
 def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
