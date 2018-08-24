@@ -6,7 +6,7 @@ from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
 from green_bot_app.models import Organisation, TelegramUser
-from telepot.loop import MessageLoop
+from telepot.loop import MessageLoop, OrderedWebhook
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 
@@ -91,14 +91,14 @@ def on_callback_query(msg):
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)
-answerer = telepot.helper.Answerer(bot)
+webhook = OrderedWebhook(bot, {'chat': on_chat_message,
+                  'callback_query': on_callback_query})
 
+webhook.run_as_thread()
+try:
+    bot.setWebhook('https://af62a986.ngrok.io/greenbot/webhook/')
+# Sometimes it would raise this error, but webhook still set successfully.
+except telepot.exception.TooManyRequestsError:
+    pass
 
-# MessageLoop(bot, {'chat': on_chat_message}).run_as_thread()
-MessageLoop(bot, {'chat': on_chat_message,
-                  'callback_query': on_callback_query}).run_as_thread()
 print('Listening ...')
-
-# Keep the program running.
-while 1:
-    time.sleep(10)
