@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'Bot_GreenTown_db',
         'USER': 'GreeBot_db_user',
         'PASSWORD': 'pass',
-        'HOST': 'waterbot-postgres', # set in docker-compose.yml
+        'HOST': 'waterbot-postgres' if SERVER == 'prod' else '127.0.0.1', # set in docker-compose.yml
         'PORT': 5432 # default postgres port
     }
 }
@@ -136,4 +136,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'volatile', 'static')
 if SERVER == 'prod':
     BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
 else:
-    BOT_TOKEN = ''
+    BOT_TOKEN = '670909040:AAHH3WyhMpCHq1qw4axxaSMX16n_rLLEdLU'
+
+if SERVER == 'prod':
+    BOT_NAME = 'GREEN_TOWN_Bot'
+else:
+    BOT_NAME = 'Dev_Green_Town_Bot'
