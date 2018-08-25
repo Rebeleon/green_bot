@@ -142,3 +142,9 @@ if SERVER == 'prod':
     BOT_NAME = 'GREEN_TOWN_Bot'
 else:
     BOT_NAME = 'Dev_Green_Town_Bot'
+
+
+if SERVER == 'prod':
+    WEBHOOK_URL = 'https://waterbot.ferumflex.com/greenbot/webhook/'    
+else:
+    WEBHOOK_URL = 'https://041cf946.ngrok.io/greenbot/webhook/'

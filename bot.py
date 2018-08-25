@@ -96,7 +96,7 @@ webhook = OrderedWebhook(bot, {'chat': on_chat_message,
 
 webhook.run_as_thread()
 try:
-    bot.setWebhook('https://af62a986.ngrok.io/greenbot/webhook/')
+    bot.setWebhook(settings.WEBHOOK_URL)
 # Sometimes it would raise this error, but webhook still set successfully.
 except telepot.exception.TooManyRequestsError:
     pass
