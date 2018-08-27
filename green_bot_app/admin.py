@@ -7,7 +7,7 @@ def change_buyer(modeladmin, request, queryset):
         Organisation.objects.filter(buyer=True).update(buyer=False)
         queryset.update(buyer=True)
     else:
-        messages.info(request, "Отклонено. Выберите только одного")
+        messages.warning(request, "Отклонено. Выберите только одного")
 
 
 change_buyer.short_description = 'Изменить покупателя'
