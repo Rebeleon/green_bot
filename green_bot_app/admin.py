@@ -1,10 +1,13 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import Organisation, TelegramUser
 
 
 def change_buyer(modeladmin, request, queryset):
-    Organisation.objects.filter(buyer=True).update(buyer=False)
-    queryset.update(buyer=True)
+    if len(queryset) == 1:
+        Organisation.objects.filter(buyer=True).update(buyer=False)
+        queryset.update(buyer=True)
+    else:
+        messages.info(request, "Отклонено. Выберите только одного")
 
 
 change_buyer.short_description = 'Изменить покупателя'
