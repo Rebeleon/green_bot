@@ -22,22 +22,6 @@ services:
       - backend
       - traefik_frontend
 
-  waterbot-bot:
-    image: hub.ferumflex.com/ferumflex/waterbot:prod
-    command: python3.6 bot.py
-    environment:
-      - SERVER=prod
-    depends_on:
-      - waterbot-postgres
-    deploy:
-      mode: replicated
-      replicas: 1
-      resources:
-        limits:
-          memory: 1G
-    networks:
-      - backend
-
   waterbot-postgres:
     image: postgres:10
     deploy:
