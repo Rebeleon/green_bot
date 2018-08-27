@@ -91,13 +91,8 @@ def on_callback_query(msg):
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)
-webhook = OrderedWebhook(bot, {'chat': on_chat_message,
-                  'callback_query': on_callback_query})
-
-webhook.run_as_thread()
 try:
     bot.setWebhook(settings.WEBHOOK_URL)
-# Sometimes it would raise this error, but webhook still set successfully.
 except telepot.exception.TooManyRequestsError:
     pass
 

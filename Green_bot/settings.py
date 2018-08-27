@@ -147,4 +147,4 @@ else:
 if SERVER == 'prod':
     WEBHOOK_URL = 'https://waterbot.ferumflex.com/greenbot/webhook/'    
 else:
-    WEBHOOK_URL = 'https://041cf946.ngrok.io/greenbot/webhook/'
+    WEBHOOK_URL = 'https://4808c9e9.ngrok.io/greenbot/webhook/'
