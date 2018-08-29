@@ -42,6 +42,12 @@ def on_chat_message(msg):
             parts.append(part)
         bot.sendMessage(chat_id, "\n".join(parts))
 
+    if command == f'/open@{settings.BOT_NAME}' or command == "/open":
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='Открыть', callback_data='open')]
+        ])
+        bot.sendMessage(chat_id, 'Открыть дверь', reply_markup=keyboard)
+
     if command == f'/next@{settings.BOT_NAME}' or command == "/next":
         counter = len(TelegramUser.objects.filter(voted=True))
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
@@ -88,6 +94,9 @@ def on_callback_query(msg):
 
     elif query_data == 'yes' and user.voted is True:
         bot.answerCallbackQuery(query_id, text='Вы уже подтверждали')
+
+    elif query_data == 'open':
+        pass
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)
