@@ -14,12 +14,16 @@ change_buyer.short_description = 'Изменить покупателя'
 
 
 class OrganisationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'buyer', 'phone_number')
+    list_display = ('name', 'buyer', 'phone_number', 'can_open_door')
     actions = [change_buyer, ]
 
 
 class TelegramUserAdmin(admin.ModelAdmin):
     list_display = ('id_telegram', 'first_name', 'last_name', 'voted')
+
+
+class DoorUsageAdmin(admin.ModelAdmin):
+    list_display = ('id_user', 'request_door_time', 'opened_door_time')
 
 
 admin.site.register(Organisation, OrganisationAdmin)
