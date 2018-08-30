@@ -1,11 +1,11 @@
 import django
 import os
-import time
+from datetime import datetime
 import telepot
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
-from green_bot_app.models import Organisation, TelegramUser
+from green_bot_app.models import Organisation, TelegramUser, DoorUsage
 from telepot.loop import MessageLoop, OrderedWebhook
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -97,6 +97,19 @@ def on_callback_query(msg):
 
     elif query_data == 'open':
         pass
+        '''
+        door_usage = DoorUsage()
+        door_usage.id_user = user.id_telegram
+        door_usage.request_door_time = datetime.now()
+        door_usage.save()
+        last_opening = DoorUsage.objects.last().opened_door_time
+        if user.can_open_door and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
+            r = requests.post(url_controller_DI, data={'click': True})
+            if r.response == '200':
+                door_usage.opened_door_time = datetime.now()
+                door_usage.save()
+                bot.answerCallbackQuery(query_id, text='Дверь открыта')
+        '''
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)

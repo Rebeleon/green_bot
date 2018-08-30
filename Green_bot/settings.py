@@ -133,6 +133,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', 'volatile', 'static')
 
+#my
+
 if SERVER == 'prod':
     BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
 else:
@@ -143,8 +145,9 @@ if SERVER == 'prod':
 else:
     BOT_NAME = 'Dev_Green_Town_Bot'
 
-
 if SERVER == 'prod':
     WEBHOOK_URL = 'https://waterbot.ferumflex.com/greenbot/webhook/'    
 else:
-    WEBHOOK_URL = 'https://4808c9e9.ngrok.io/greenbot/webhook/'
+    WEBHOOK_URL = 'https://68b3bdb7.ngrok.io/greenbot/webhook/'
+
+DOOR_SLEEP_TIME = 15
