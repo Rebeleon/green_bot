@@ -3,6 +3,7 @@ import os
 import requests
 from datetime import datetime
 import telepot
+import json
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
@@ -101,12 +102,13 @@ def on_callback_query(msg):
         door_usage.id_user = TelegramUser.objects.get(id_telegram=user.id_telegram)
         door_usage.request_door_time = datetime.now()
         door_usage.save()
-        last_opening = Organisation.objects.last().opened_door_time
-        if user.can_open_door and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
-            r = requests.post(settings.DOOR_URL, data={'Authorization': settings.DOOR_AUTH})
-            if r.status_code == 200 or 'ok':
-                last_opening = datetime.now()
-                last_opening.save()
+       # last_opening = Organisation.objects.last().opened_door_time
+        if user.can_open_door: #and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
+            r = requests.post(settings.DOOR_URL, headers={'Authorization': settings.DOOR_AUTH})
+           # print(r.json())
+            if r.json()['message'] == 'ok' and r.status_code == 200:
+               # last_opening = datetime.now()
+               # last_opening.save()
                 bot.answerCallbackQuery(query_id, text='Дверь открыта')
 
 

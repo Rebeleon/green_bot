@@ -123,7 +123,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -148,9 +148,9 @@ else:
 if SERVER == 'prod':
     WEBHOOK_URL = 'https://waterbot.ferumflex.com/greenbot/webhook/'    
 else:
-    WEBHOOK_URL = 'https://0d46702d.ngrok.io/greenbot/webhook/'
+    WEBHOOK_URL = 'https://85067cd0.ngrok.io/greenbot/webhook/'
 
 # data for door
 DOOR_SLEEP_TIME = 15
 DOOR_AUTH = '8VfY8XdnBmEoES2UuH4Zvnhh6oKqMbN48FHYpZpn'
-DOOR_URL = 'http://192.168.2.152/door '
+DOOR_URL = 'http://192.168.2.152/door'
