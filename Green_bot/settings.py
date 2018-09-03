@@ -148,6 +148,9 @@ else:
 if SERVER == 'prod':
     WEBHOOK_URL = 'https://waterbot.ferumflex.com/greenbot/webhook/'    
 else:
-    WEBHOOK_URL = 'https://68b3bdb7.ngrok.io/greenbot/webhook/'
+    WEBHOOK_URL = 'https://0d46702d.ngrok.io/greenbot/webhook/'
 
+# data for door
 DOOR_SLEEP_TIME = 15
+DOOR_AUTH = '8VfY8XdnBmEoES2UuH4Zvnhh6oKqMbN48FHYpZpn'
+DOOR_URL = 'http://192.168.2.152/door '

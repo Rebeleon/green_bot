@@ -1,5 +1,6 @@
 import django
 import os
+import requests
 from datetime import datetime
 import telepot
 from django.conf import settings
@@ -96,20 +97,17 @@ def on_callback_query(msg):
         bot.answerCallbackQuery(query_id, text='Вы уже подтверждали')
 
     elif query_data == 'open':
-        pass
-        '''
         door_usage = DoorUsage()
-        door_usage.id_user = user.id_telegram
+        door_usage.id_user = TelegramUser.objects.get(id_telegram=user.id_telegram)
         door_usage.request_door_time = datetime.now()
         door_usage.save()
-        last_opening = DoorUsage.objects.last().opened_door_time
+        last_opening = Organisation.objects.last().opened_door_time
         if user.can_open_door and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
-            r = requests.post(url_controller_DI, data={'click': True})
-            if r.response == '200':
-                door_usage.opened_door_time = datetime.now()
-                door_usage.save()
+            r = requests.post(settings.DOOR_URL, data={'Authorization': settings.DOOR_AUTH})
+            if r.status_code == 200 or 'ok':
+                last_opening = datetime.now()
+                last_opening.save()
                 bot.answerCallbackQuery(query_id, text='Дверь открыта')
-        '''
 
 
 bot = telepot.Bot(settings.BOT_TOKEN)
