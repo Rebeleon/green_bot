@@ -22,7 +22,7 @@ async def serve_client(websocket, path):
 
     # authentication
     try:
-        auth = await asyncio.wait_for(websocket.recv(), timeout=5)
+        auth = await asyncio.wait_for(websocket.recv(), timeout=20)
         if auth != TOKEN:
             logging.info(f'Bad auth {auth}')
             return
