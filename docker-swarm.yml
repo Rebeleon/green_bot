@@ -22,6 +22,29 @@ services:
       - backend
       - traefik_frontend
 
+  waterbot-proxy:
+    image: hub.ferumflex.com/ferumflex/waterbot:prod
+    command: python3.6 server.py
+    environment:
+      - SERVER=prod
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: 1G
+      labels:
+        - "traefik.enable=true"
+        - "traefik.backend=waterbotproxy"
+        - "traefik.docker.network=traefik_frontend"
+        - "traefik.frontend.rule=Host:proxy.ferumflex.com"
+        - "traefik.port=8080"
+        - "traefik.websocket.frontend.rule=Host:proxy2.ferumflex.com"
+        - "traefik.websocket.port=9000"
+    networks:
+      - backend
+      - traefik_frontend
+
   waterbot-postgres:
     image: postgres:10
     deploy:
