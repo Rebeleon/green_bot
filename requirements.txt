@@ -4,3 +4,4 @@ psycopg2-binary==2.7.5
 telepot==12.7
 requests==2.19.1
 websockets==6.0
+coloredlogs==10.0
