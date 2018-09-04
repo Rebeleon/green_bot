@@ -14,9 +14,20 @@ coloredlogs.install(level='INFO')
 
 queue_open_door = asyncio.Queue(maxsize=1)
 
+TOKEN = 'Rg4P1gQeMy'
+
 
 async def serve_client(websocket, path):
     logging.info(f'Connected {websocket}')
+
+    # authentication
+    try:
+        auth = await asyncio.wait_for(websocket.recv(), timeout=5)
+        if auth != TOKEN:
+            logging.info(f'Bad auth {auth}')
+            return
+    except asyncio.TimeoutError:
+        return
 
     latest_ping = None
     latest_pong = None
@@ -50,7 +61,7 @@ asyncio.get_event_loop().run_until_complete(start_server)
 
 
 async def handle(request):
-    if request.headers.get('Authorization') == '8VfY8XdnBmEoES2UuH4Zvnhh6oKqMbN48FHYpZpn':
+    if request.headers.get('Authorization') == TOKEN:
         logging.info('Request to open door')
 
         if not queue_open_door.empty():
@@ -70,6 +81,6 @@ async def handle(request):
 
 app = web.Application()
 app.add_routes([
-    web.get('/', handle),
+    web.post('/', handle),
 ])
 web.run_app(app, port=8080)
