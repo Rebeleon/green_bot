@@ -47,13 +47,16 @@ async def serve_client(websocket, path):
         except asyncio.TimeoutError:
             pass
 
-        try:
-            data = await asyncio.wait_for(queue_open_door.get(), timeout=0.5)
-            if data and data['action'] == 'door' and data['expired'] > datetime.datetime.utcnow():
-                logging.info('Send open door to device')
-                await websocket.send('door')
-        except asyncio.TimeoutError:
-            pass
+        # do not try to open door, if connection is idle
+        threshold = datetime.datetime.utcnow() - datetime.timedelta(minutes=2)
+        if latest_pong and latest_ping and latest_pong < threshold:
+            try:
+                data = await asyncio.wait_for(queue_open_door.get(), timeout=0.5)
+                if data and data['action'] == 'door' and data['expired'] > datetime.datetime.utcnow():
+                    logging.info('Send open door to device')
+                    await websocket.send('door')
+            except asyncio.TimeoutError:
+                pass
             
 
 start_server = websockets.serve(serve_client, '195.201.172.78', 9000)
