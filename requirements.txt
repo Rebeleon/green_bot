@@ -1,5 +1,7 @@
-Django==2.1
+Django==2.1.1
 pycodestyle==2.4.0
 psycopg2-binary==2.7.5
 telepot==12.7
 requests==2.19.1
+websockets==6.0
+coloredlogs==10.0

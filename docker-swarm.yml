@@ -22,6 +22,20 @@ services:
       - backend
       - traefik_frontend
 
+  waterbot-proxy:
+    image: hub.ferumflex.com/ferumflex/waterbot:prod
+    command: python3.6 server.py
+    environment:
+      - SERVER=prod
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: 1G
+    networks:
+      - outside
+
   waterbot-postgres:
     image: postgres:10
     deploy:
@@ -43,3 +57,6 @@ networks:
   backend:
   traefik_frontend:
     external: true
+  outside:
+    external:
+      name: "host"    
