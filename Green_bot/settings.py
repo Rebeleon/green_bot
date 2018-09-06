@@ -135,6 +135,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'volatile', 'static')
 
 #my
 
+ALOWED_CHATS = [-233467260, -317812169, -255156275]
+
 if SERVER == 'prod':
     BOT_TOKEN = '697504258:AAFRjuveeAcin9pWyqA2qjAyMhNmK5fFIRA'
 else:
