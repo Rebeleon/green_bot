@@ -29,6 +29,7 @@ def get_or_create_user(msg):
 def on_chat_message(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
     print('Chat:', content_type, chat_type, chat_id)
+    logging.warning('Telegram raw data %s' % msg['message']['chat']['id'])
 
     if content_type != 'text':
         return
