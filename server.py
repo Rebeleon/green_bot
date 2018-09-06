@@ -49,7 +49,7 @@ async def serve_client(websocket, path):
 
         # do not try to open door, if connection is idle
         threshold = datetime.datetime.utcnow() - datetime.timedelta(minutes=2)
-        if latest_pong and latest_ping and latest_pong < threshold:
+        if latest_pong and latest_ping and latest_pong > threshold:
             try:
                 data = await asyncio.wait_for(queue_open_door.get(), timeout=0.5)
                 if data and data['action'] == 'door' and data['expired'] > datetime.datetime.utcnow():
