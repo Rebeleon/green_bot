@@ -106,7 +106,7 @@ def on_callback_query(msg):
         if user.can_open_door: #and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
             r = requests.post(settings.DOOR_URL, headers={'Authorization': settings.DOOR_AUTH})
            # print(r.json())
-            if r.json()['message'] == 'ok' and r.status_code == 200:
+            if r.status_code == 200:
                # last_opening = datetime.now()
                # last_opening.save()
                 bot.answerCallbackQuery(query_id, text='Дверь открыта')

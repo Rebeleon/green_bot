@@ -13,7 +13,7 @@ def pass_update(request):
     update = json.loads(raw)
 
     if 'message' in update:
-        data = message = update['message']
+        data = update['message']
     elif 'callback_query' in update:
         data = update['callback_query']
     else:
