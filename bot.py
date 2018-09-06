@@ -3,12 +3,12 @@ import os
 import requests
 from datetime import datetime
 import telepot
+import logging
 import json
 from django.conf import settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Green_bot.settings")
 django.setup()
 from green_bot_app.models import Organisation, TelegramUser, DoorUsage
-from telepot.loop import MessageLoop, OrderedWebhook
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
 
@@ -69,6 +69,8 @@ def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
     msg_identifier = telepot.origin_identifier(msg)
     print('Callback Query:', query_id, from_id, query_data)
+    print('Chat_id', msg['message']['chat']['id'])
+    logging.warning('Telegram raw data %s' % msg['message']['chat']['id'])
     user = get_or_create_user(msg)
 
     if query_data == 'yes' and user.voted is False:
@@ -105,7 +107,7 @@ def on_callback_query(msg):
        # last_opening = Organisation.objects.last().opened_door_time
         if user.can_open_door: #and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
             r = requests.post(settings.DOOR_URL, headers={'Authorization': settings.DOOR_AUTH})
-           # print(r.json())
+            print(r.json())
             if r.status_code == 200:
                # last_opening = datetime.now()
                # last_opening.save()
