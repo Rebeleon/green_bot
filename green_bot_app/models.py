@@ -15,8 +15,8 @@ class Organisation(models.Model):
 
 class TelegramUser(models.Model):
     id_telegram = models.IntegerField()
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
     voted = models.BooleanField(default=False)
     can_open_door = models.BooleanField(default=True)
 

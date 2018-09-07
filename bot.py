@@ -20,8 +20,8 @@ def get_or_create_user(msg):
     except TelegramUser.DoesNotExist:
         user = TelegramUser()
         user.id_telegram = msg['from']['id']
-        user.first_name = msg['from']['first_name']
-        user.last_name = msg['from']['last_name']
+        user.first_name = msg['from'].get('first_name')
+        user.last_name = msg['from'].get('last_name')
         user.save()
         return user
 
