@@ -59,7 +59,7 @@ async def serve_client(websocket, path):
                 pass
             
 
-start_server = websockets.serve(serve_client, '195.201.172.78', 9000)
+start_server = websockets.serve(serve_client, '144.76.100.208', 9000)
 asyncio.get_event_loop().run_until_complete(start_server)
 
 

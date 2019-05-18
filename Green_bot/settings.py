@@ -155,4 +155,4 @@ else:
 # data for door
 DOOR_SLEEP_TIME = 15
 DOOR_AUTH = 'Rg4P1gQeMy'
-DOOR_URL = 'http://195.201.172.78:8080/'
+DOOR_URL = 'http://144.76.100.208:8080/'
