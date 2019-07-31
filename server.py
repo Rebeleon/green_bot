@@ -12,43 +12,42 @@ WEBSOCKET_PORT = 9000
 HTTP_HOST = 'localhost'
 HTTP_PORT = 8080
 AUTH_TOKEN = 'Rg4P1gQeMy'
+COMMANDS = ['open', 'enable', 'disable']
 
 logging.basicConfig(level=logging.INFO)
-queue_open_door = asyncio.Queue(maxsize=1)
+cmd_queue = asyncio.Queue(maxsize=1)
 
 
 async def serve_client(websocket, path):
-    logging.info('Websocket client connected')
+    logging.info('Device is connected')
 
-    # authentication
     try:
         auth_token = await asyncio.wait_for(websocket.recv(), timeout=20)
         if auth_token != AUTH_TOKEN:
-            logging.info(f'Invalid auth token')
+            logging.info('Device uses invalid auth token')
             return
         else:
-            logging.info('Successfully authorized')
-            await asyncio.wait_for(websocket.send('authorized'), timeout=0.5)
+            logging.info('Device is successfully authorized')
+            await asyncio.wait_for(websocket.send('authorized'), timeout=5)
     except asyncio.TimeoutError:
         return
 
     while True:
         try:
-            action = await asyncio.wait_for(websocket.recv(), timeout=0.5)
-            if action == 'opened':
-                logging.info('Received opened')
+            response = await asyncio.wait_for(websocket.recv(), timeout=0.5)
+            logging.info(f'Received "{response}" from device')
         except asyncio.TimeoutError:
             pass
         except websockets.exceptions.ConnectionClosed:
-            logging.info('Websocket client disconnected')
+            logging.info('Device disconnected')
             return
 
         try:
-            data = await asyncio.wait_for(queue_open_door.get(), timeout=0.5)
-            if data and data['action'] == 'door' and data['expired'] > datetime.datetime.utcnow():
-                # ODOR! - https://knowyourmeme.com/memes/hold-the-door
-                logging.info('Sent open door command to device')
-                await asyncio.wait_for(websocket.send('ODOR!'), timeout=0.5)
+            data = await asyncio.wait_for(cmd_queue.get(), timeout=0.5)
+            if data and data['expired'] > datetime.datetime.utcnow():
+                cmd = data['command']
+                logging.info(f'Sent "{cmd}" command to device')
+                await asyncio.wait_for(websocket.send(cmd), timeout=5)
         except asyncio.TimeoutError:
             pass
 
@@ -59,21 +58,29 @@ asyncio.get_event_loop().run_until_complete(websockets.serve(serve_client, WEBSO
 
 async def handle(request):
     if request.headers.get('Authorization') == AUTH_TOKEN:
-        logging.info('Request to open door')
+        body = await request.json()
 
-        if not queue_open_door.empty():
-            await queue_open_door.get()
+        if not body or not 'command' in body or not body['command'] in COMMANDS:
+            logging.info('Received request with wrong or missing command')
+            return web.json_response({'status': 'error', 'message': 'Wrong or missing command'}, status=400)
+
+        cmd = body['command']
+
+        logging.info(f'Received request with "{cmd}" command')
+
+        if not cmd_queue.empty():
+            await asyncio.wait_for(cmd_queue.get(), timeout=5)
 
         data = {
-            'action': 'door',
+            'command': cmd,
             'expired': datetime.datetime.utcnow() + datetime.timedelta(seconds=10),
         }
-        await queue_open_door.put(data)
-        return web.json_response({'status': 'ok'})
-    else:
-        logging.info('Open door request error: No auth token')
 
-        return web.json_response({'status': 'error'})
+        await asyncio.wait_for(cmd_queue.put(data), timeout=5)
+        return web.json_response({'status': 'ok', 'message': 'command sent'})
+    else:
+        logging.info('Wrong or missing authorization token')
+        return web.json_response({'status': 'error', 'message': 'Wrong or missing authorization token'}, status=401)
 
 app = web.Application()
 app.add_routes([

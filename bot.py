@@ -111,7 +111,14 @@ def on_callback_query(msg):
             door_usage.save()
            # last_opening = Organisation.objects.last().opened_door_time
             if user.can_open_door: #and last_opening + datetime.timedelta(seconds=settings.DOOR_SLEEP_TIME) > datetime.now():
-                r = requests.post(settings.DOOR_URL, headers={'Authorization': settings.DOOR_AUTH})
+                data = {
+                    'command': 'open',
+                }
+                headers = {
+                    'Content-type': 'application/json',
+                    'Authorization': settings.DOOR_AUTH,
+                }
+                r = requests.post(settings.DOOR_URL, headers=headers, data=json.dumps(data))
                 print(r.json())
                 if r.status_code == 200:
                    # last_opening = datetime.now()
