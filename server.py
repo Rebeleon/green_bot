@@ -7,7 +7,7 @@ import logging
 
 from aiohttp import web
 
-WEBSOCKET_HOST = 'localhost'
+WEBSOCKET_HOST = '144.76.100.208'
 WEBSOCKET_PORT = 9000
 HTTP_HOST = 'localhost'
 HTTP_PORT = 8080
